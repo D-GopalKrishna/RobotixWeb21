@@ -1,14 +1,12 @@
 from django.urls import path, include
 from rest_framework import routers
-from .serializers import FormResponsesViewset, QuestionsForRecruitmentViewset
+# from .views import FormResponsesViewset, QuestionsForRecruitmentViewset, FormResponsesAPIView
+from .views import CandidateFormResponsesAPIView, QuestionsForRecruitmentView
 
-
-router = routers.DefaultRouter()
-router.register(r'form_responses', FormResponsesViewset)
-router.register(r'questionset_recruit', QuestionsForRecruitmentViewset)
 
 app_name = 'recruitment'
 
 urlpatterns = [
-    path('', include(router.urls)), 
+    path('questions/', QuestionsForRecruitmentView.as_view()), 
+    path('', CandidateFormResponsesAPIView.as_view())
 ]   

@@ -1,21 +1,31 @@
 from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
-from .models import FYI,DIY,sponsors, web ,app
+from .models import *
 
 
 # Register your models here.
 
-admin.site.register(web)
-admin.site.register(app)
-
-@admin.register(FYI)
-class FYIAdmin(ImportExportModelAdmin):
+@admin.register(Web)
+class WebAdmin(ImportExportModelAdmin):
     pass
 
-@admin.register(DIY)
-class DIYAdmin(ImportExportModelAdmin):
+
+@admin.register(DIY_FYI)
+class DIY_FYIAdmin(ImportExportModelAdmin):
     pass
 
-@admin.register(sponsors)
+@admin.register(Sponsors)
 class sponsorsAdmin(ImportExportModelAdmin):
+    pass
+
+@admin.register(Emails)
+class emailsAdmin(ImportExportModelAdmin):
+    pass
+
+@admin.register(Gallery)
+class GalleryAdmin(ImportExportModelAdmin):
+    pass
+
+@admin.register(Contact)
+class ContactAdmin(ImportExportModelAdmin):
     pass

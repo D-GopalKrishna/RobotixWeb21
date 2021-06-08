@@ -2,12 +2,57 @@ version: '3.7'
 
 services: 
     app:
-        build: 
+        build:
             context: .
         ports:
             - "8000:8000"
-        volumes: 
-            - ../RobotixWeb21:/RobotixWeb21
-        command: sh -c "python manage.py runserver 0.0.0.0:8000"
-        environment: 
-            - DEBUG=1
+        volumes:
+            - .:/app/backend/
+        command: >
+            sh -c "python manage.py migrate --no-input && 
+            python manage.py collectstatic --no-input && 
+            python manage.py initadmin &&
+            gunicorn RobotixWeb.wsgi --bind 0.0.0.0:8000 --workers 2 --threads 4"
+        env_file:
+            - ./docker/docker.app.env
+        depends_on:
+            - db
+    db:
+        image: postgres:12.0-alpine
+        volumes:
+            - postgres_data:/var/lib/postgresql/data/
+        env_file:
+            - ./docker/docker.db.env
+        expose:
+            - 5432
+    # redis:
+    #     image: redis:alpine
+    # celery_beat:
+    #     build:
+    #         context: .
+    #     restart: on-failure
+    #     volumes:
+    #         - .:/app/backend/
+    #     command: celery -A RobotixWeb beat -l info 
+    #     env_file:
+    #         - ./docker/docker.app.env
+    #     depends_on:
+    #         - db
+    #         - redis
+    #         - app
+
+    # celery_worker:
+    #     build:
+    #         context: .
+    #     restart: always
+    #     command: celery -A RobotixWeb worker -l info
+    #     volumes:
+    #         - .:/app/backend/
+    #     env_file:
+    #         - ./docker/docker.app.env
+    #     depends_on:
+    #         - db
+    #         - redis
+    #         - app
+volumes:
+    postgres_data:

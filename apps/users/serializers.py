@@ -1,8 +1,9 @@
-from rest_framework import serializers
+from rest_framework import serializers, exceptions
 from django.contrib import auth
 
 from .models import CustomUser
-
+from rest_framework.exceptions import AuthenticationFailed
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 
 class CustomUserSerializer(serializers.ModelSerializer):
     
@@ -40,7 +41,7 @@ class LoginSerializer(serializers.ModelSerializer):
         try:
             filtered_user_by_email = CustomUser.objects.get(email__iexact=email)
             if filtered_user_by_email:
-                raise AuthenticationFailed(
+                raise exceptions.AuthenticationFailed(
                     detail='You are allready register!! Please Login or Reset Your Password'
                     )
         except:
@@ -49,11 +50,11 @@ class LoginSerializer(serializers.ModelSerializer):
         user = auth.authenticate(email=email, password=password)
 
         if not user:
-            raise AuthenticationFailed('Invalid credentials, try again')
+            raise exceptions.AuthenticationFailed('Invalid credentials, try again')
         if not user.is_active:
-            raise AuthenticationFailed('Account disabled, contact admin')
+            raise exceptions.AuthenticationFailed('Account disabled, contact admin')
         if not user.email_verified:
-            raise AuthenticationFailed('Email is not verified')
+            raise exceptions.AuthenticationFailed('Email is not verified')
         
         return {
             'user_id' : user.user_id,
@@ -137,6 +138,6 @@ class SetNewPasswordSerializer(serializers.Serializer):
             user.set_password(validated_data.get('password', instance.password))
             user.save()
         except Exception as e:
-            raise AuthenticationFailed('The reset link is invalid', 401)
+            raise exceptions.AuthenticationFailed('The reset link is invalid', 401)
 
         return instance

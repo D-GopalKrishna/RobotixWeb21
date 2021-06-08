@@ -4,7 +4,7 @@ from celery import Celery
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'RobotixWeb.settings')
 
-BASE_REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379')
+BASE_REDIS_URL = os.environ.get('REDIS_URL', 'redis://redis:6379')
 
 app = Celery('RobotixWeb')
 

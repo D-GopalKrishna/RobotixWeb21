@@ -5,3 +5,6 @@ from . models import *
 @admin.register(Team)
 class TeamAdmin(ImportExportModelAdmin):
     pass
+@admin.register(Achievements)
+class AchievementsAdmin(ImportExportModelAdmin):
+    pass

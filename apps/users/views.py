@@ -23,6 +23,11 @@ import datetime
 import os
 FRONTEND_URL='https://robotix.nitrr.ac.in'
 
+class CustomRedirect(HttpResponsePermanentRedirect):
+
+    allowed_schemes = [os.environ.get('APP_SCHEME'), 'http', 'https']
+
+
 class UserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     permission_classes = [IsAuthenticated]
